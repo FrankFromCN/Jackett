@@ -44,7 +44,7 @@ namespace Jackett.Common.Utils
             {
                 LoggerNamePattern = "Microsoft.*"
             };
-            microsoftDebugRule.SetLoggingLevels(LogLevel.Debug, LogLevel.Info);
+            microsoftDebugRule.SetLoggingLevels(NLog.LogLevel.Debug, NLog.LogLevel.Info);
             microsoftDebugRule.Final = true;
             if (settings.TracingEnabled)
             {

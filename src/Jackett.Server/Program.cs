@@ -24,7 +24,7 @@ namespace Jackett.Server
         private static RuntimeSettings Settings { get; set; }
         public static bool isWebHostRestart = false;
 
-        public static void Main(string[] args)
+        public static void DummyMain(string[] args, IWebHostBuilder webHostBuilder)
         {
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
@@ -122,7 +122,7 @@ namespace Jackett.Server
                     var applicationFolder = configurationService.GetContentFolder();
                     logger.Debug($"Content root path is: {applicationFolder}");
 
-                    CreateWebHostBuilder(args, url, applicationFolder).Build().Run();
+                    CreateWebHostBuilder(webHostBuilder, args, url, applicationFolder).Build().Run();
                 }
                 catch (Exception e)
                 {
@@ -166,12 +166,9 @@ namespace Jackett.Server
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args, string[] urls, string contentRoot) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseContentRoot(contentRoot)
+        public static IWebHostBuilder CreateWebHostBuilder(IWebHostBuilder webHostBuilder, string[] args, string[] urls, string contentRoot) =>
+            webHostBuilder.UseContentRoot(contentRoot)
                 .UseWebRoot(contentRoot)
-                .UseUrls(urls)
-                .PreferHostingUrls(true)
                 .UseConfiguration(Configuration)
                 .UseStartup<Startup>()
                 .ConfigureLogging(logging =>
@@ -180,5 +177,15 @@ namespace Jackett.Server
                     logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                 })
                 .UseNLog();
+        // WebHost.UseContentRoot(contentRoot)
+        //     .UseWebRoot(contentRoot)
+        //     .UseConfiguration(Configuration)
+        //     .UseStartup<Startup>()
+        //     .ConfigureLogging(logging =>
+        //     {
+        //         logging.ClearProviders();
+        //         logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+        //     })
+        //     .UseNLog();
     }
 }

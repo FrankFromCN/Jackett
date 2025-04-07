@@ -282,7 +282,7 @@ namespace Jackett.Server.Controllers
 
         private void SetEnhancedLogLevel(bool enabled)
         {
-            Helper.SetLogLevel(enabled ? LogLevel.Debug : LogLevel.Info);
+            Helper.SetLogLevel(enabled ? NLog.LogLevel.Debug : NLog.LogLevel.Info);
             serverConfig.RuntimeSettings.TracingEnabled = enabled;
         }
     }

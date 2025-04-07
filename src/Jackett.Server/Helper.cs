@@ -55,21 +55,20 @@ namespace Jackett.Server
 
         public static void SetupLogging(ContainerBuilder builder) =>
             builder?.RegisterInstance(LogManager.GetCurrentClassLogger()).SingleInstance();
-
-        public static void SetLogLevel(LogLevel level)
+        public static void SetLogLevel(NLog.LogLevel level)
         {
             foreach (var rule in LogManager.Configuration.LoggingRules)
             {
                 if (rule.LoggerNamePattern == "Microsoft.*")
                 {
-                    if (!rule.Levels.Contains(LogLevel.Debug))
+                    if (!rule.Levels.Contains(NLog.LogLevel.Debug))
                     {
-                        //don't change the first microsoftRule
+                        // don't change the first microsoftRule
                         continue;
                     }
 
                     var targets = LogManager.Configuration.ConfiguredNamedTargets;
-                    if (level == LogLevel.Debug)
+                    if (level == NLog.LogLevel.Debug)
                     {
                         foreach (var target in targets)
                         {
@@ -86,23 +85,72 @@ namespace Jackett.Server
                     continue;
                 }
 
-                if (level == LogLevel.Debug)
+                if (level == NLog.LogLevel.Debug)
                 {
-                    if (!rule.Levels.Contains(LogLevel.Debug))
+                    if (!rule.Levels.Contains(NLog.LogLevel.Debug))
                     {
-                        rule.EnableLoggingForLevel(LogLevel.Debug);
+                        rule.EnableLoggingForLevel(NLog.LogLevel.Debug);
                     }
                 }
                 else
                 {
-                    if (rule.Levels.Contains(LogLevel.Debug))
+                    if (rule.Levels.Contains(NLog.LogLevel.Debug))
                     {
-                        rule.DisableLoggingForLevel(LogLevel.Debug);
+                        rule.DisableLoggingForLevel(NLog.LogLevel.Debug);
                     }
                 }
             }
 
             LogManager.ReconfigExistingLoggers();
         }
+
+        // public static void SetLogLevel(LogLevel level)
+        // {
+        //     foreach (var rule in LogManager.Configuration.LoggingRules)
+        //     {
+        //         if (rule.LoggerNamePattern == "Microsoft.*")
+        //         {
+        //             if (!rule.Levels.Contains(LogLevel.Debug))
+        //             {
+        //                 //don't change the first microsoftRule
+        //                 continue;
+        //             }
+
+        //             var targets = LogManager.Configuration.ConfiguredNamedTargets;
+        //             if (level == LogLevel.Debug)
+        //             {
+        //                 foreach (var target in targets)
+        //                 {
+        //                     rule.Targets.Add(target);
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 foreach (var target in targets)
+        //                 {
+        //                     rule.Targets.Remove(target);
+        //                 }
+        //             }
+        //             continue;
+        //         }
+
+        //         if (level == LogLevel.Debug)
+        //         {
+        //             if (!rule.Levels.Contains(LogLevel.Debug))
+        //             {
+        //                 rule.EnableLoggingForLevel(LogLevel.Debug);
+        //             }
+        //         }
+        //         else
+        //         {
+        //             if (rule.Levels.Contains(LogLevel.Debug))
+        //             {
+        //                 rule.DisableLoggingForLevel(LogLevel.Debug);
+        //             }
+        //         }
+        //     }
+
+        //     LogManager.ReconfigExistingLoggers();
+        // }
     }
 }
